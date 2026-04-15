@@ -8,6 +8,7 @@ function requireEnv(key: string) : string {
 
 export const config = {
     port: parseInt(process.env.PORT ?? '3000', 10),
+    clientUrl: requireEnv('CLIENT_URL'),
     db: {
         host: requireEnv('DB_HOST'),
         port: parseInt(requireEnv('DB_PORT'), 10),
@@ -15,5 +16,5 @@ export const config = {
         user: requireEnv('DB_USER'),
         password: requireEnv('DB_PASSWORD'),
     }, 
-    nodeEnv: (process.env.NODE_ENV as 'development' | 'production' | 'test') || 'development',
+    nodeEnv: (process.env.NODE_ENV ?? 'development') as 'development' | 'production' | 'test',
 } as const;

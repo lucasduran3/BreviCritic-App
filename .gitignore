@@ -1,4 +1,7 @@
 node_modules/
 server/node_modules
+server/dist
+server/build
+.tsbuildinfo
 
 server/.env

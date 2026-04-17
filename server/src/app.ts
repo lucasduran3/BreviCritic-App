@@ -2,10 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import { config } from './config/env.js';
 import { AppError } from './shared/errors/AppError.js';
+import healthRouter from './routes/health.js';
 
 const app: express.Application = express();
-
-const healthRouter = await import('./routes/health.js');
 
 app.use(express.json({ limit: '10kb' }));
 
@@ -15,7 +14,7 @@ app.use(
   }),
 );
 
-app.use('/health', healthRouter.default);
+app.use('/health', healthRouter);
 
 app.use(
   (

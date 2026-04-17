@@ -1,4 +1,4 @@
-import pool from '../../../db/pool.js';
+import pool from '../../db/pool.js';
 import { RegisterDTO } from './auth.types.js';
 
 export async function createUser(dto: RegisterDTO): Promise<string> {

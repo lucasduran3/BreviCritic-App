@@ -1,7 +1,7 @@
 export interface RegisterDTO {
   username: string;
   email: string;
-  password_hash: string;
+  password: string;
   name: string;
   lastname: string;
   country: string;
@@ -12,11 +12,11 @@ export interface RegisterDTO {
 
 export interface LoginDTO {
   identifier: string; // email o username
-  password_hash: string;
+  password: string;
 }
 
 export interface JWTPayload {
-    sub: string;
-    iat?: number;
-    exp?: number;
+  sub: string;
+  iat?: number;
+  exp?: number;
 }

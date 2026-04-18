@@ -1,14 +1,17 @@
 import pool from '../../db/pool.js';
 import { RegisterDTO } from './auth.types.js';
 
-export async function createUser(dto: RegisterDTO): Promise<string> {
+export async function createUser(
+  dto: RegisterDTO,
+  passwordHash: string,
+): Promise<string> {
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
     const insertAuthSQL = `INSERT INTO auth.users (email, password_hash) VALUES ($1, $2) RETURNING id`;
     const authResult = await client.query(insertAuthSQL, [
       dto.email,
-      dto.password_hash,
+      passwordHash,
     ]);
     const userId = authResult.rows[0].id;
 
@@ -37,7 +40,7 @@ export async function createUser(dto: RegisterDTO): Promise<string> {
 
 export async function findUserByIdentifier(
   identifier: string,
-): Promise<{ id: string; password_hash: string } | null> {
+): Promise<{ id: string; passwordHash: string } | null> {
   try {
     const query = `SELECT u.id, u.password_hash 
                    FROM auth.users u
@@ -48,7 +51,10 @@ export async function findUserByIdentifier(
     if (result.rows.length === 0) {
       return null;
     }
-    return result.rows[0];
+    return {
+      id: result.rows[0].id,
+      passwordHash: result.rows[0].password_hash,
+    };
   } catch (error) {
     console.error('Error finding user by identifier:', error);
     throw error;

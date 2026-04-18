@@ -1,3 +1,5 @@
+import { SignOptions } from 'jsonwebtoken';
+
 function requireEnv(key: string): string {
   const value = process.env[key];
   if (value === undefined || value === '') {
@@ -9,6 +11,10 @@ function requireEnv(key: string): string {
 export const config = {
   port: parseInt(process.env.PORT ?? '3000', 10),
   clientUrl: requireEnv('CLIENT_URL'),
+  jwt: {
+    secret: requireEnv('JWT_SECRET'),
+    expiresIn: process.env.JWT_EXPIRES_IN ?? '7d',
+  },
   db: {
     host: requireEnv('DB_HOST'),
     port: parseInt(requireEnv('DB_PORT'), 10),

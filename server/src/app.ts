@@ -4,9 +4,10 @@ import { config } from './config/env.js';
 import { AppError } from './shared/errors/AppError.js';
 import healthRouter from './routes/health.js';
 import authRouter from './modules/auth/auth.router.js';
+import cookieParser from 'cookie-parser';
 
 const app: express.Application = express();
-
+app.use(cookieParser());
 app.use(express.json({ limit: '10kb' }));
 
 app.use(

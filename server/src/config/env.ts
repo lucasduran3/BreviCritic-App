@@ -1,5 +1,3 @@
-import { SignOptions } from 'jsonwebtoken';
-
 function requireEnv(key: string): string {
   const value = process.env[key];
   if (value === undefined || value === '') {

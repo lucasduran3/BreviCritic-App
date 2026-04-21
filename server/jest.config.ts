@@ -1,11 +1,12 @@
-import type { Config } from 'jest'
-import { createDefaultEsmPreset } from 'ts-jest'
+import type { Config } from 'jest';
+import { createDefaultEsmPreset } from 'ts-jest';
 
-const presetConfig = createDefaultEsmPreset()
 
-const jestConfig: Config = {
-  ...presetConfig,
+export default {
+  ...createDefaultEsmPreset(),
   testEnvironment: 'node',
-}
-
-export default jestConfig
+  setupFiles: ['<rootDir>/jest.setup.ts'],
+  moduleNameMapper: {
+    '^(\\.{1,2}/.*)\\.js$': '$1',
+  },
+} satisfies Config;

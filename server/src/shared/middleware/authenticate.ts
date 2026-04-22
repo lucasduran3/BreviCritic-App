@@ -5,6 +5,8 @@ import { JWTPayload } from '../../modules/auth/auth.types.js';
 import { AppError } from '../errors/AppError.js';
 import { config } from '../../config/env.js';
 
+// verifica que la request viene de un usuario logueado, sino devuelve un error 401
+
 export function authenticate(
   req: Request,
   res: Response,

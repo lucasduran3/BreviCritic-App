@@ -12,18 +12,13 @@ export async function findOwnProfile(
   client: PoolClient,
   userId: string,
 ): Promise<Profile | null> {
-  try {
-    const result = await client.query(
-      'SELECT * FROM app.profiles WHERE id = $1',
-      [userId],
-    );
+  const result = await client.query(
+    'SELECT * FROM app.profiles WHERE id = $1',
+    [userId],
+  );
 
-    if (result.rows.length === 0) return null;
-    return mapToProfile(result.rows[0]);
-  } catch (error) {
-    console.error('Error fetching own profile:', error);
-    throw error;
-  }
+  if (result.rows.length === 0) return null;
+  return mapToProfile(result.rows[0]);
 }
 
 export async function updateOwnProfile(
@@ -51,18 +46,13 @@ export async function updateOwnProfile(
 
   if (setClauses.length === 0) return findOwnProfile(client, userId); // No hay cambios, devuelve el perfil actual
 
-  try {
-    const result = await client.query(
-      `UPDATE app.profiles SET ${setClauses.join(', ')} WHERE id = $${values.length + 1} RETURNING *`,
-      [...values, userId],
-    );
+  const result = await client.query(
+    `UPDATE app.profiles SET ${setClauses.join(', ')} WHERE id = $${values.length + 1} RETURNING *`,
+    [...values, userId],
+  );
 
-    if (result.rows.length === 0) return null;
-    return mapToProfile(result.rows[0]);
-  } catch (error) {
-    console.error('Error updating own profile:', error);
-    throw error;
-  }
+  if (result.rows.length === 0) return null;
+  return mapToProfile(result.rows[0]);
 }
 
 // Requiere RLS para verificar visibilidad
@@ -70,17 +60,12 @@ export async function findProfileByUsername(
   client: PoolClient,
   username: string,
 ): Promise<PublicProfile | null> {
-  try {
-    const result = await client.query(
-      `SELECT username, name, lastname, country, city, profile_photo, is_public, created_at FROM app.profiles WHERE username = $1`,
-      [username],
-    );
-    if (result.rows.length === 0) return null;
-    return mapToPublicProfile(result.rows[0]);
-  } catch (error) {
-    console.error('Error fetching profile by username:', error);
-    throw error;
-  }
+  const result = await client.query(
+    `SELECT username, name, lastname, country, city, profile_photo, is_public, created_at FROM app.profiles WHERE username = $1`,
+    [username],
+  );
+  if (result.rows.length === 0) return null;
+  return mapToPublicProfile(result.rows[0]);
 }
 
 export async function searchProfiles(
@@ -88,21 +73,16 @@ export async function searchProfiles(
 ): Promise<ProfileSearchResult[]> {
   const { search, limit, offset } = filters;
 
-  try {
-    const result = await pool.query(
-      `SELECT id, username, profile_photo 
+  const result = await pool.query(
+    `SELECT id, username, profile_photo 
      FROM app.profile_search
      WHERE ($1::text IS NULL OR username ILIKE '%' || $1 || '%')
      ORDER BY username DESC
      LIMIT $2 OFFSET $3`,
-      [search || null, limit, offset],
-    );
+    [search || null, limit, offset],
+  );
 
-    return result.rows.map(mapToSearchResult);
-  } catch (error) {
-    console.error('Error searching profiles:', error);
-    throw error;
-  }
+  return result.rows.map(mapToSearchResult);
 }
 
 //-- Mappers

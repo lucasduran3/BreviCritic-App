@@ -1,7 +1,7 @@
 import { body, query, validationResult } from 'express-validator';
 import { Request, Response, NextFunction } from 'express';
 
-export const updateProfileValidator = [
+export const updateProfileValidation = [
   body('username')
     .optional()
     .isString()
@@ -56,7 +56,7 @@ export const updateProfileValidator = [
   }),
 ];
 
-export const searchProfilesValidator = [
+export const searchProfilesValidation = [
   query('search')
     .optional()
     .isString()

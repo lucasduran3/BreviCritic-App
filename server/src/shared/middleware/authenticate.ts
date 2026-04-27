@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 import { JWTPayload } from '../../modules/auth/auth.types.js';
 import { AppError } from '../errors/AppError.js';
 import { config } from '../../config/env.js';
@@ -21,9 +20,9 @@ export function authenticate(
     req.userId = decoded.sub;
     next();
   } catch (err) {
-    if (err instanceof TokenExpiredError) {
+    if (err instanceof jwt.TokenExpiredError) {
       return next(new AppError('Token expired', 401));
-    } else if (err instanceof JsonWebTokenError) {
+    } else if (err instanceof jwt.JsonWebTokenError) {
       return next(new AppError('Invalid token', 401));
     }
   }

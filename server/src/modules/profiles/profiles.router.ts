@@ -32,3 +32,5 @@ router.get(
 );
 
 router.get('/:username', authenticate, getProfileByUsername);
+
+export default router;

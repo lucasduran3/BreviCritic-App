@@ -34,7 +34,7 @@ export async function getProfileByUsername(
     // segunda query sin rls para verificar si es privado o no existe
     if (!profile) {
       const exists = await client.query(
-        'SELECT 1 FROM app.profiles WHERE username = $1',
+        'SELECT is_public FROM app.profile_search WHERE username = $1',
         [username],
       );
 
@@ -60,10 +60,17 @@ export async function updateProfile(
   dto: UpdateProfileDTO,
 ): Promise<Profile> {
   return withUser(userId, async (client) => {
-    const updatedProfile = await updateOwnProfile(client, userId, dto);
-    if (!updatedProfile) {
-      throw new AppError('Profile not found', 404);
+    try {
+      const updatedProfile = await updateOwnProfile(client, userId, dto);
+      if (!updatedProfile) {
+        throw new AppError('Profile not found', 404);
+      }
+      return updatedProfile;
+    } catch (error: any) {
+      if (error.code === '23505') {
+        throw new AppError('Username already taken', 409);
+      }
+      throw error;
     }
-    return updatedProfile;
   });
 }

@@ -5,7 +5,15 @@ import { createTestUser, resetDatabase } from './utils.js';
 
 beforeEach(async () => {
   await resetDatabase();
-  await createTestUser();
+  await createTestUser({
+    username: 'authUser',
+    email: 'auth@example.com',
+    name: 'Auth',
+    lastname: 'User',
+    country: 'Chile',
+    city: 'Santiago de Chile',
+    isPublic: true,
+  });
 });
 
 afterAll(async () => {

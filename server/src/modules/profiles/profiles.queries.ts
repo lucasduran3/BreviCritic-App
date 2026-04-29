@@ -1,5 +1,5 @@
 import pool from '../../db/pool.js';
-import { Pool, PoolClient } from 'pg';
+import { PoolClient } from 'pg';
 import {
   UpdateProfileDTO,
   ProfileSearchFilters,
@@ -18,6 +18,7 @@ export async function findOwnProfile(
   );
 
   if (result.rows.length === 0) return null;
+  
   return mapToProfile(result.rows[0]);
 }
 
@@ -52,6 +53,7 @@ export async function updateOwnProfile(
   );
 
   if (result.rows.length === 0) return null;
+
   return mapToProfile(result.rows[0]);
 }
 
@@ -65,6 +67,7 @@ export async function findProfileByUsername(
     [username],
   );
   if (result.rows.length === 0) return null;
+
   return mapToPublicProfile(result.rows[0]);
 }
 

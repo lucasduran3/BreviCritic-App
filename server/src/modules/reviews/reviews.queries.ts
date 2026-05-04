@@ -12,7 +12,7 @@ export async function insertReview(
   dto: CreateReviewDTO,
 ): Promise<Review> {
   const result = await client.query(
-    'INSERT INTO app.reviews (user_id, movie_id, content, score) VALUES ($1, $2, $3) RETURNING *',
+    'INSERT INTO app.reviews (user_id, movie_id, content, score) VALUES ($1, $2, $3, $4) RETURNING *',
     [userId, dto.movieId, dto.content, dto.score],
   );
 

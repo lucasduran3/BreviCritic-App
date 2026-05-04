@@ -1,9 +1,9 @@
 import { App } from 'supertest/types.js';
-import pool from '../db/pool.js';
+import { adminPool } from '../db/pool.js';
 
 export async function resetDatabase() {
-  await pool.query(`
-    DELETE FROM app.profiles;
+  await adminPool.query(`
+    DELETE FROM auth.users;
     DELETE FROM app.reviews;
     DELETE FROM app.follows;
   `);
@@ -35,7 +35,7 @@ export async function createTestUser(
     isPublic = true,
   } = options;
 
-  const client = await pool.connect();
+  const client = await adminPool.connect();
   try {
     await client.query('BEGIN');
     const insertAuthSQL = `SELECT auth.register_user($1, $2) AS id`;
@@ -71,7 +71,7 @@ export async function createFollow(
   followerId: string,
   followedId: string,
 ): Promise<void> {
-  await pool.query(
+  await adminPool.query(
     'INSERT INTO app.follows (follower_id, followed_id) VALUES ($1, $2)',
     [followerId, followedId],
   );
@@ -89,4 +89,18 @@ export async function loginAndGetCookie(
   const cookie = response.headers['set-cookie'];
   if (!cookie) throw new Error(`Login failed for ${identifier}`);
   return Array.isArray(cookie) ? cookie[0] : cookie;
+}
+
+export async function createReview(
+  userId: string,
+  movieId: number,
+  content: string,
+  score: number,
+): Promise<string> {
+  const result = await adminPool.query(
+    'INSERT INTO app.reviews(user_id, movie_id, content, score) VALUES ($1, $2, $3, $4) RETURNING *',
+    [userId, movieId, content, score],
+  );
+
+  return result.rows[0].id;
 }

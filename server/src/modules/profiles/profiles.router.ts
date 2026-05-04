@@ -12,7 +12,7 @@ import {
   handleValidationErrors,
 } from './profiles.validator.js';
 import { reviewFiltersValidation } from '../reviews/reviews.validator.js';
-import { getReviewsByUsername } from '../reviews/reviews.scontroller.js';
+import { getReviewsByUsername } from '../reviews/reviews.controller.js';
 
 const router = Router();
 

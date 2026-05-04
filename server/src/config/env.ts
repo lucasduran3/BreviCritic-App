@@ -19,6 +19,8 @@ export const config = {
     database: requireEnv('DB_NAME'),
     user: requireEnv('DB_USER'),
     password: requireEnv('DB_PASSWORD'),
+    superUser: requireEnv('DB_SUPER_USER'),
+    superPassword: requireEnv('DB_SUPER_PASSWORD'),
   },
   nodeEnv: (process.env.NODE_ENV ?? 'development') as
     | 'development'

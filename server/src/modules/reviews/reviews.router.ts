@@ -5,7 +5,7 @@ import {
   createReview,
   updateReview,
   deleteReview,
-} from './reviews.scontroller.js';
+} from './reviews.controller.js';
 import {
   createReviewValidation,
   updateReviewValidation,

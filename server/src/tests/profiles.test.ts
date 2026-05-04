@@ -1,6 +1,6 @@
 import supertest from 'supertest';
 import app from '../app.js';
-import pool from '../db/pool.js';
+import pool, {adminPool} from '../db/pool.js';
 import {
   resetDatabase,
   createTestUser,
@@ -52,6 +52,7 @@ beforeEach(async () => {
 
 afterAll(async () => {
   await pool.end();
+  await adminPool.end();
 });
 
 describe('GET/profiles/me', () => {

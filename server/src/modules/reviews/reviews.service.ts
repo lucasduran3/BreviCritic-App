@@ -10,7 +10,7 @@ import {
   findReviewById,
   findReviewsByUserId,
   removeReview,
-} from './review.queries.js';
+} from './reviews.queries.js';
 import { withUser } from '../../db/withUser.js';
 import { AppError } from '../../shared/errors/AppError.js';
 

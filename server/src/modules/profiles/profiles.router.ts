@@ -11,6 +11,8 @@ import {
   searchProfilesValidation,
   handleValidationErrors,
 } from './profiles.validator.js';
+import { reviewFiltersValidation } from '../reviews/reviews.validator.js';
+import { getReviewsByUsername } from '../reviews/reviews.scontroller.js';
 
 const router = Router();
 
@@ -32,5 +34,13 @@ router.get(
 );
 
 router.get('/:username', authenticate, getProfileByUsername);
+
+router.get(
+  '/:username/reviews',
+  authenticate,
+  reviewFiltersValidation,
+  handleValidationErrors,
+  getReviewsByUsername,
+);
 
 export default router;

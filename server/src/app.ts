@@ -5,6 +5,7 @@ import { AppError } from './shared/errors/AppError.js';
 import healthRouter from './routes/health.js';
 import authRouter from './modules/auth/auth.router.js';
 import profilesRouter from './modules/profiles/profiles.router.js';
+import reviewsRouter from './modules/reviews/reviews.router.js';
 import cookieParser from 'cookie-parser';
 
 const app: express.Application = express();
@@ -20,6 +21,7 @@ app.use(
 app.use('/health', healthRouter);
 app.use('/auth', authRouter);
 app.use('/profiles', profilesRouter);
+app.use('/reviews', reviewsRouter);
 
 app.use(
   (

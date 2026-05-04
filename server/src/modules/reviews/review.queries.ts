@@ -1,4 +1,4 @@
-import { PoolClient } from 'pg';
+import { PoolClient, QueryResult } from 'pg';
 import {
   Review,
   CreateReviewDTO,
@@ -6,7 +6,7 @@ import {
   ReviewFilters,
 } from './reviews.types.js';
 
-export async function createReview(
+export async function insertReview(
   client: PoolClient,
   userId: string,
   dto: CreateReviewDTO,
@@ -36,31 +36,26 @@ export async function findReviewsByUserId(
   client: PoolClient,
   userId: string,
   filters: ReviewFilters,
-): Promise<Review[] | null> {
+): Promise<Review[]> {
   const { limit, offset } = filters;
   const result = await client.query(
     'SELECT * FROM app.reviews WHERE user_id = $1 ORDER BY updated_at DESC LIMIT $2 OFFSET $3',
     [userId, limit, offset],
   );
 
-  if (result.rows.length === 0) return null;
+  if (result.rows.length === 0) return [];
 
   return result.rows.map((v) => mapToReview(v));
 }
 
-export async function updateReview(
+export async function updateReviewQuerie(
   client: PoolClient,
   reviewId: string,
   dto: UpdateReviewDTO,
 ): Promise<Review | null> {
-  const fieldMap: Record<keyof UpdateReviewDTO, string> = {
-    content: 'content',
-    score: 'score',
-  };
-
   const entries = Object.entries(dto) as [keyof UpdateReviewDTO, unknown][];
   const setClauses = entries.map(
-    ([key], index) => `${fieldMap[key]} =  $${index + 1}`,
+    ([key], index) => `${key.toString()} =  $${index + 1}`,
   );
 
   const values = entries.map(([, value]) => value);
@@ -77,11 +72,14 @@ export async function updateReview(
   return mapToReview(result.rows[0]);
 }
 
-export async function deleteReview(
+export async function removeReview(
   client: PoolClient,
   reviewId: string,
-): Promise<void> {
-  await client.query('DELETE FROM app.reviews WHERE id = $1', [reviewId]);
+): Promise<QueryResult<any>> {
+  return await client.query(
+    'DELETE FROM app.reviews WHERE id = $1 RETURNING id',
+    [reviewId],
+  );
 }
 
 function mapToReview(row: Record<string, unknown>): Review {

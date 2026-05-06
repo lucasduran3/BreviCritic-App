@@ -13,14 +13,15 @@ import {
 } from './reviews.queries.js';
 import { withUser } from '../../db/withUser.js';
 import { AppError } from '../../shared/errors/AppError.js';
+import { getOrFetchMovie } from '../movies/service/movies.service.js';
 
 export async function createReview(
   userId: string,
   dto: CreateReviewDTO,
 ): Promise<Review> {
+  await getOrFetchMovie(dto.movieId); // comprobar que la pelicula existe en la DB
   return withUser(userId, async (client) => {
-    const newReview = await insertReview(client, userId, dto);
-    return newReview;
+    return await insertReview(client, userId, dto);
   });
 }
 

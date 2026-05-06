@@ -22,6 +22,10 @@ export const config = {
     superUser: requireEnv('DB_SUPER_USER'),
     superPassword: requireEnv('DB_SUPER_PASSWORD'),
   },
+  tmdb: {
+    apiKey: requireEnv('TMDB_API_KEY'),
+    baseUrl: requireEnv('TMDB_BASE_URL'),
+  },
   nodeEnv: (process.env.NODE_ENV ?? 'development') as
     | 'development'
     | 'production'

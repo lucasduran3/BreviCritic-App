@@ -7,6 +7,10 @@ import {
   searchProfiles,
 } from './profiles.controller.js';
 import {
+  followUserHandler,
+  unfollowUserHandler,
+} from '../follows/follows.controller.js';
+import {
   updateProfileValidation,
   searchProfilesValidation,
   handleValidationErrors,
@@ -42,5 +46,8 @@ router.get(
   handleValidationErrors,
   getReviewsByUsername,
 );
+
+router.post('/:username/follow', authenticate, followUserHandler);
+router.delete('/:username/follow', authenticate, unfollowUserHandler);
 
 export default router;

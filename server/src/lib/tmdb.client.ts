@@ -18,7 +18,7 @@ export async function searchMovies(
   return data.results;
 }
 
-export async function getMovieBydId(tmdbId: number): Promise<TmdbMovieDetail> {
+export async function getMovieById(tmdbId: number): Promise<TmdbMovieDetail> {
   return tmdbFetch<TmdbMovieDetail>(`/movie/${tmdbId}`);
 }
 

@@ -1,6 +1,6 @@
-import pool from '../../../db/pool.js';
-import { TmdbMovieDetail } from '../../../lib/tmdb.types.js';
-import { Movie } from '../types/movies.types.js';
+import pool from '../../db/pool.js';
+import { TmdbMovieDetail } from '../../lib/tmdb.types.js';
+import { Movie } from './movies.types.js';
 
 export async function findMovieById(tmdbId: number): Promise<Movie | null> {
   const result = await pool.query('SELECT * FROM app.movies WHERE id = $1', [

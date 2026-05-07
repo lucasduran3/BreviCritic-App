@@ -13,7 +13,7 @@ import {
 } from './reviews.queries.js';
 import { withUser } from '../../db/withUser.js';
 import { AppError } from '../../shared/errors/AppError.js';
-import { getOrFetchMovie } from '../movies/service/movies.service.js';
+import { getOrFetchMovie } from '../movies/movies.service.js';
 
 export async function createReview(
   userId: string,

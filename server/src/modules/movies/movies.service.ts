@@ -1,7 +1,7 @@
-import { getMovieBydId, searchMovies } from '../../../lib/tmdb.client.js';
-import { findMovieById, upsertMovie } from '../queries/movies.queries.js';
-import { Movie } from '../types/movies.types.js';
-import { TmdbMovieSearchResult } from '../../../lib/tmdb.types.js';
+import { getMovieById, searchMovies } from '../../lib/tmdb.client.js';
+import { findMovieById, upsertMovie } from './movies.queries.js';
+import { Movie } from './movies.types.js';
+import { TmdbMovieSearchResult } from '../../lib/tmdb.types.js';
 
 // Tiempo maximo antes de considerar los datos desactualizados en ms
 const STALE_AFTER_MS = 7 * 24 * 60 * 60 * 1000;
@@ -13,7 +13,7 @@ export async function getOrFetchMovie(tmdbId: number): Promise<Movie> {
     return existing;
   }
 
-  const tmdbMovie = await getMovieBydId(tmdbId);
+  const tmdbMovie = await getMovieById(tmdbId);
   return upsertMovie(tmdbMovie);
 }
 

@@ -3,6 +3,7 @@ import { adminPool } from '../db/pool.js';
 
 export async function resetDatabase() {
   await adminPool.query(`
+    DELETE FROM app.notifications;
     DELETE FROM auth.users;
     DELETE FROM app.reviews;
     DELETE FROM app.follows;
@@ -103,4 +104,15 @@ export async function createReview(
   );
 
   return result.rows[0].id;
+}
+
+export async function createReaction(
+  userId: string,
+  reviewId: string,
+  type: 'like' | 'dislike',
+): Promise<void> {
+  await adminPool.query(
+    'INSERT INTO app.reviews_reaction(user_id, review_id, type) VALUES ($1, $2, $3)',
+    [userId, reviewId, type],
+  );
 }

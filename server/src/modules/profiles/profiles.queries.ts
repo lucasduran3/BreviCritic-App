@@ -1,5 +1,5 @@
 import pool from '../../db/pool.js';
-import { PoolClient } from 'pg';
+import { Pool, PoolClient } from 'pg';
 import {
   UpdateProfileDTO,
   ProfileSearchFilters,
@@ -18,7 +18,7 @@ export async function findOwnProfile(
   );
 
   if (result.rows.length === 0) return null;
-  
+
   return mapToProfile(result.rows[0]);
 }
 
@@ -86,6 +86,25 @@ export async function searchProfiles(
   );
 
   return result.rows.map(mapToSearchResult);
+}
+
+export async function findUserById(
+  client: PoolClient,
+  userId: string,
+): Promise<{ passwordHash: string } | null> {
+  const result = await client.query(
+    'SELECT password_hash FROM auth.users WHERE id = $1 AND is_active = true',
+    [userId],
+  );
+  if (result.rows.length === 0) return null;
+  return { passwordHash: result.rows[0].password_hash };
+}
+
+export async function softDeleteUser(
+  client: PoolClient,
+  userId: string,
+): Promise<void> {
+  await client.query('SELECT auth.soft_delete_user($1)', [userId]);
 }
 
 //-- Mappers

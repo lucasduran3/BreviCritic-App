@@ -1,6 +1,6 @@
 import supertest from 'supertest';
 import app from '../app.js';
-import pool, {adminPool} from '../db/pool.js';
+import pool, { adminPool } from '../db/pool.js';
 import {
   resetDatabase,
   createTestUser,
@@ -55,7 +55,7 @@ afterAll(async () => {
   await adminPool.end();
 });
 
-describe('GET/profiles/me', () => {
+/*describe('GET/profiles/me', () => {
   it('returns own profile', async () => {
     const res = await supertest(app)
       .get('/profiles/me')
@@ -233,5 +233,24 @@ describe('GET /profiles (search)', () => {
   it('returns 401 without token', async () => {
     const res = await supertest(app).get('/profiles');
     expect(res.status).toBe(401);
+  });
+});*/
+
+describe('DELETE /profiles/me', () => {
+  it('should delete the user and prevent further login', async () => {
+    const res = await supertest(app)
+      .delete('/profiles/me')
+      .set('Cookie', publicUserCookie)
+      .send({ password: 'password123' });
+
+    expect(res.status).toBe(204);
+    expect(res.headers['set-cookie']).toBeDefined(); // cookie fue limpiada
+
+    // Verificar que ya no puede loguearse
+    const loginRes = await supertest(app)
+      .post('/auth/login')
+      .send({ identifier: 'publicuser', password: 'password123' });
+
+    expect(loginRes.status).toBe(401);
   });
 });

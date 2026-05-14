@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt';
 import { withUser } from '../../db/withUser.js';
 import { AppError } from '../../shared/errors/AppError.js';
 import {
@@ -12,6 +13,8 @@ import {
   updateOwnProfile,
   findProfileByUsername,
   searchProfiles,
+  softDeleteUser,
+  findUserById,
 } from './profiles.queries.js';
 
 export async function getOwnProfile(userId: string): Promise<Profile> {
@@ -72,5 +75,23 @@ export async function updateProfile(
       }
       throw error;
     }
+  });
+}
+
+export async function deleteOwnProfile(
+  userId: string,
+  password: string,
+): Promise<void> {
+  return withUser(userId, async (client) => {
+    const result = await findUserById(client, userId);
+    if (!result) {
+      throw new AppError('Profile not found', 404);
+    }
+    const passwordMatch = await bcrypt.compare(password, result.passwordHash);
+    if (!passwordMatch) {
+      throw new AppError('Invalid credentials', 401);
+    }
+
+    await softDeleteUser(client, userId);
   });
 }

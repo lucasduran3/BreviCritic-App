@@ -77,6 +77,10 @@ export const searchProfilesValidation = [
     .withMessage('Offset must be an integer'),
 ];
 
+export const deleteOwnProfileValidation = [
+  body('password').isString().withMessage('Password must be a string'),
+];
+
 export function handleValidationErrors(
   req: Request,
   res: Response,

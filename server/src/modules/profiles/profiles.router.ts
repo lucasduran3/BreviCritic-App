@@ -5,6 +5,7 @@ import {
   updateMe,
   getProfileByUsername,
   searchProfiles,
+  deleteMe,
 } from './profiles.controller.js';
 import {
   followUserHandler,
@@ -13,6 +14,7 @@ import {
 import {
   updateProfileValidation,
   searchProfilesValidation,
+  deleteOwnProfileValidation,
   handleValidationErrors,
 } from './profiles.validator.js';
 import { reviewFiltersValidation } from '../reviews/reviews.validator.js';
@@ -48,6 +50,15 @@ router.get(
 );
 
 router.post('/:username/follow', authenticate, followUserHandler);
+
+router.delete(
+  '/me',
+  authenticate,
+  deleteOwnProfileValidation,
+  handleValidationErrors,
+  deleteMe,
+);
+
 router.delete('/:username/follow', authenticate, unfollowUserHandler);
 
 export default router;

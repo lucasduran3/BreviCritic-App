@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import * as profileService from './profiles.service.js';
+import { clearAuthCookie } from '../../shared/utils/cookies.js';
 
 export async function getMe(req: Request, res: Response, next: NextFunction) {
   try {
@@ -53,6 +54,20 @@ export async function searchProfiles(
 
     const profiles = await profileService.searchProfilesWithFilters(filters);
     res.json(profiles);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function deleteMe(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    await profileService.deleteOwnProfile(req.userId!, req.body.password);
+    clearAuthCookie(res);
+    res.status(204).send();
   } catch (error) {
     next(error);
   }

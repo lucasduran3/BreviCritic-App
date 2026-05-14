@@ -28,6 +28,7 @@ beforeEach(async () => {
     city: 'BuenosAires',
     isPublic: true,
   });
+  
 
   privateUserId = await createTestUser({
     username: 'privateuser',
@@ -39,11 +40,13 @@ beforeEach(async () => {
     isPublic: false,
   });
 
+
   followerUserId = await createTestUser({
     username: 'follower',
     email: 'follower@example.com',
     isPublic: true,
   });
+
 
   publicUserCookie = await loginAndGetCookie(app, 'publicuser');
   privateUserCookie = await loginAndGetCookie(app, 'privateuser');
@@ -55,7 +58,7 @@ afterAll(async () => {
   await adminPool.end();
 });
 
-/*describe('GET/profiles/me', () => {
+describe('GET/profiles/me', () => {
   it('returns own profile', async () => {
     const res = await supertest(app)
       .get('/profiles/me')
@@ -234,7 +237,7 @@ describe('GET /profiles (search)', () => {
     const res = await supertest(app).get('/profiles');
     expect(res.status).toBe(401);
   });
-});*/
+});
 
 describe('DELETE /profiles/me', () => {
   it('should delete the user and prevent further login', async () => {

@@ -1,13 +1,12 @@
 import { App } from 'supertest/types.js';
 import { adminPool } from '../db/pool.js';
+import supertest from 'supertest';
 
 export async function resetDatabase() {
-  await adminPool.query(`
-    DELETE FROM app.notifications;
-    DELETE FROM auth.users;
-    DELETE FROM app.reviews;
-    DELETE FROM app.follows;
-  `);
+  await adminPool.query('DELETE FROM app.notifications');
+  await adminPool.query('DELETE FROM app.follows');
+  await adminPool.query('DELETE FROM app.reviews_reaction');
+  await adminPool.query('DELETE FROM auth.users');
 }
 
 interface CreateTestUserOptions {
@@ -82,7 +81,6 @@ export async function loginAndGetCookie(
   app: App,
   identifier: string,
 ): Promise<string> {
-  const supertest = (await import('supertest')).default;
   const response = await supertest(app).post('/auth/login').send({
     identifier,
     password: 'password123',

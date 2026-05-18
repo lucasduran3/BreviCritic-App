@@ -11,7 +11,7 @@ export const config = {
   clientUrl: requireEnv('CLIENT_URL'),
   jwt: {
     secret: requireEnv('JWT_SECRET'),
-    expiresIn: process.env.JWT_EXPIRES_IN ?? '7d',
+    expiresIn: process.env.JWT_EXPIRES_IN ?? '15m',
   },
   db: {
     host: requireEnv('DB_HOST'),
@@ -25,6 +25,11 @@ export const config = {
   tmdb: {
     apiKey: requireEnv('TMDB_API_KEY'),
     baseUrl: requireEnv('TMDB_BASE_URL'),
+  },
+  redis: {
+    host: requireEnv('REDDIS_HOST'),
+    port: parseInt(requireEnv('REDIS_PORT'), 10),
+    password: requireEnv('REDIS_PASSWORD'),
   },
   nodeEnv: (process.env.NODE_ENV ?? 'development') as
     | 'development'

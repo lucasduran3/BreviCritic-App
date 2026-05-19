@@ -1,6 +1,6 @@
 function requireEnv(key: string): string {
   const value = process.env[key];
-  if (value === undefined || value === '') {
+  if (value === undefined) {
     throw new Error(`Environment variable not found: ${key}`);
   }
   return value;
@@ -27,7 +27,7 @@ export const config = {
     baseUrl: requireEnv('TMDB_BASE_URL'),
   },
   redis: {
-    host: requireEnv('REDDIS_HOST'),
+    host: requireEnv('REDIS_HOST'),
     port: parseInt(requireEnv('REDIS_PORT'), 10),
     password: requireEnv('REDIS_PASSWORD'),
   },

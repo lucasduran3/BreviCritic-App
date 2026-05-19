@@ -1,5 +1,6 @@
 import { App } from 'supertest/types.js';
 import { adminPool } from '../db/pool.js';
+import redis from '../db/redis.js';
 import supertest from 'supertest';
 
 export async function resetDatabase() {
@@ -113,4 +114,11 @@ export async function createReaction(
     'INSERT INTO app.reviews_reaction(user_id, review_id, type) VALUES ($1, $2, $3)',
     [userId, reviewId, type],
   );
+}
+
+export async function resetRedis() {
+  const keys = await redis.keys('refresh_token:*');
+  if (keys.length > 0) {
+    await redis.del(...keys);
+  }
 }

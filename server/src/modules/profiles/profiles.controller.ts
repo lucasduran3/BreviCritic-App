@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import * as profileService from './profiles.service.js';
-import { clearAuthCookie } from '../../shared/utils/cookies.js';
+import { clearAuthCookies } from '../../shared/utils/cookies.js';
+import { logout } from '../auth/auth.service.js';
 
 export async function getMe(req: Request, res: Response, next: NextFunction) {
   try {
@@ -66,7 +67,10 @@ export async function deleteMe(
 ) {
   try {
     await profileService.deleteOwnProfile(req.userId!, req.body.password);
-    clearAuthCookie(res);
+    if (req.cookies.refreshToken) {
+      await logout(req.cookies.refreshToken);
+    }
+    clearAuthCookies(res);
     res.status(204).send();
   } catch (error) {
     next(error);

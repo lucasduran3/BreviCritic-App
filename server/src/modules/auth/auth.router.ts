@@ -1,5 +1,10 @@
 import { Router } from 'express';
-import { registerHandler, loginHandler } from './auth.controller.js';
+import {
+  registerHandler,
+  loginHandler,
+  refreshHandler,
+  logoutHandler,
+} from './auth.controller.js';
 import {
   registerValidation,
   loginValidation,
@@ -15,5 +20,8 @@ router.post(
   registerHandler,
 );
 router.post('/login', loginValidation, handleValidationErrors, loginHandler);
+
+router.post('/refresh', refreshHandler);
+router.post('/logout', logoutHandler);
 
 export default router;

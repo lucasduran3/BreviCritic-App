@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken';
 import { JWTPayload } from '../../modules/auth/auth.types.js';
 import { AppError } from '../errors/AppError.js';
 import { config } from '../../config/env.js';
-import pool from '../../db/pool.js';
 
 // verifica que la request viene de un usuario logueado, sino devuelve un error 401
 
@@ -18,19 +17,6 @@ export async function authenticate(
   }
   try {
     const decoded = jwt.verify(token, config.jwt.secret) as JWTPayload;
-
-    const result = await pool.query(
-      'SELECT auth.is_user_active($1) AS is_active',
-      [decoded.sub],
-    );
-
-    if (result.rows.length === 0) {
-      return next(new AppError('User not found', 404));
-    }
-    if (!result.rows[0]?.is_active) {
-      return next(new AppError('Account is disabled', 401));
-    }
-
     req.userId = decoded.sub;
     next();
   } catch (err) {

@@ -39,7 +39,7 @@ async function tmdbFetch<T>(
     throw new AppError('Movie not found on TMDB', 404);
   }
 
-  if (response.status === 404) {
+  if (response.status === 401) {
     throw new AppError('Invalid TMDB API key', 500);
   }
 
